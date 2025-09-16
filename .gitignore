@@ -1,0 +1,15 @@
+# Byte-compiled / cache files
+__pycache__/
+*.pyc
+
+# SQLite database (don’t commit local DBs)
+db.sqlite3
+
+# Logs
+*.log
+
+# Virtual environment
+.venv/
+
+# Environment variables
+.env
