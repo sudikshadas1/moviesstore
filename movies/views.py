@@ -24,6 +24,15 @@ def show(request, id):
     template_data['reviews'] = reviews
     return render(request, 'movies/show.html', {'template_data': template_data})
 
+from django.contrib.auth.forms import UserCreationForm
+def signup(request):
+    template_data = {}
+    template_data['title'] = 'Sign Up'
+    if request.method == 'GET':
+        template_data['form'] = UserCreationForm()
+        return render(request, 'accounts/signup.html',
+            {'template_data': template_data})
+
 @login_required
 def create_review(request, id):
     if request.method == 'POST' and request.POST['comment'] != '':
