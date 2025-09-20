@@ -6,4 +6,3 @@ urlpatterns = [
     path('', views.requests_page, name='index'),
     path('<int:id>/delete/', views.delete_request, name='delete'),
 ]
-
