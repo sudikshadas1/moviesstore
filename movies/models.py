@@ -37,3 +37,13 @@ class MoviePetition(models.Model):
     requested_by = models.ForeignKey(User, on_delete=models.CASCADE) # who requested the movie
     votes = models.IntegerField(default=0) # number of votes
     voters = models.ManyToManyField(User, related_name='voted_petitions', blank=True) # users who voted
+
+class MovieFlag(models.Model):
+    id = models.AutoField(primary_key=True)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reason = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Flag on {self.movie.name} by {self.user.username}"

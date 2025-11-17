@@ -32,6 +32,16 @@
         </p>
         <h2>Reviews</h2>
         <hr />
+        <div class="mb-3">
+          {% if user.is_authenticated %}
+          <form method="POST" action="{% url 'movies.flag_movie' id=template_data.movie.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#flagModal">
+              Flag this movie
+            </button>
+          </form>
+          {% endif %}
+        </div>
         <ul class="list-group">
           {% for review in template_data.reviews %}
           <li class="list-group-item pb-3 pt-3">
@@ -83,6 +93,29 @@
       <div class="col-md-6 mx-auto mb-3 text-center">
         <img src="{{ template_data.movie.image.url }}" class="rounded img-card-400" />
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Flag Movie Modal -->
+<div class="modal fade" id="flagModal" tabindex="-1" aria-labelledby="flagModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="flagModalLabel">Flag Movie</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" action="{% url 'movies.flag_movie' id=template_data.movie.id %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <p>Please provide a reason for flagging this movie:</p>
+          <textarea name="reason" class="form-control" rows="4" placeholder="e.g., Incorrect information, Inappropriate content, etc." required></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-warning">Submit Flag</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

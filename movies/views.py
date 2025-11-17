@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Movie, Review, MovieRequest, MoviePetition
+from .models import Movie, Review, MovieRequest, MoviePetition, MovieFlag
 from django import forms
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 def index(request):
     search_term = request.GET.get('search')
@@ -130,3 +131,27 @@ def approve_petition(request, id):
     petition.voters.add(request.user)
     petition.save()
     return redirect("movies.view_petitions")
+
+
+@login_required
+def flag_movie(request, id):
+    movie = get_object_or_404(Movie, id=id)
+    if request.method == 'POST':
+        reason = request.POST.get('reason', '').strip()
+        if reason:
+            flag = MovieFlag()
+            flag.movie = movie
+            flag.user = request.user
+            flag.reason = reason
+            flag.save()
+            return redirect('movies.show', id=id)
+    return redirect('movies.show', id=id)
+
+
+@staff_member_required
+def moderation_queue(request):
+    flags = MovieFlag.objects.all().order_by('-timestamp')
+    template_data = {}
+    template_data['title'] = 'Moderation Queue'
+    template_data['flags'] = flags
+    return render(request, 'movies/moderation_queue.html', {'template_data': template_data})
